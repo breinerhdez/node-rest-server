@@ -16,6 +16,17 @@ process.env.PORT = process.env.PORT || 3000;
 process.env.NODE_ENV = process.env.NODE_ENV || "dev";
 
 /**
+ * JWT expiración
+ */
+process.env.JWT_EXPIRES_IN = 60*60*24*30;
+
+/**
+ * JWT secret
+ */
+process.env.JWT_SIGN_SECRET =
+  process.env.JWT_SIGN_SECRET || "VU6js0WqT71cWdJTSlNRVo3zuZOLZcmCK";
+
+/**
  * Base de datos
  */
 let urlDB;

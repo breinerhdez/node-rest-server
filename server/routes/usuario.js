@@ -1,11 +1,16 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const _ = require("underscore");
+
 const Usuario = require("../models/usuario");
+const {
+  verificarToken,
+  verificarAdminRole,
+} = require("../middlewares/autenticacion");
 
 const app = express();
 
-app.get("/usuario", function (req, res) {
+app.get("/usuario", [verificarToken, verificarAdminRole], function (req, res) {
   let page = req.query.page || 0;
   page = Number(page);
   // se maneja con números de página
@@ -33,7 +38,7 @@ app.get("/usuario", function (req, res) {
         });
       }
 
-      let total = await Usuario.count(filter);
+      let total = await Usuario.countDocuments(filter);
 
       res.json({
         ok: true,
@@ -44,7 +49,7 @@ app.get("/usuario", function (req, res) {
     });
 });
 
-app.post("/usuario", function (req, res) {
+app.post("/usuario", [verificarToken, verificarAdminRole], function (req, res) {
   let body = req.body;
 
   let usuario = new Usuario({
@@ -70,7 +75,7 @@ app.post("/usuario", function (req, res) {
   });
 });
 
-app.put("/usuario/:id", function (req, res) {
+app.put("/usuario/:id", [verificarToken, verificarAdminRole], function (req, res) {
   let id = req.params.id;
   // let body = req.body;
   // configurando los campos que sí son permitidos con underscore
@@ -96,7 +101,7 @@ app.put("/usuario/:id", function (req, res) {
   );
 });
 
-app.delete("/usuario/:id", function (req, res) {
+app.delete("/usuario/:id", [verificarToken, verificarAdminRole], function (req, res) {
   let id = req.params.id;
 
   let update = {
